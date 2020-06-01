@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Credit calc</title>
+  <link rel="stylesheet" type="text/css" href="./main.css">
+  <style>
+    .calculator {
+      max-width: 300px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-gap: 4px;
+      grid-template-areas:
+        "input input input input"
+        "AC sqrt pow div"
+        "one two three mult"
+        "four five six sub"
+        "seven eight nine add"
+        "zero zero dr eq";
+    }
+
+    .calculator button {
+      background-color: #e0e0e0;
+      color: #4e8efd;
+      font-weight: bold;
+    }
+
+    .calculator input {
+      font-weight: bold;
+      font-size: 20px;
+    }
+
+    .calculator button:hover {
+      background-color: #c0c0c0;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="menu">
+    <a type="button" href="./about.html">About</a>
+    <a type="button" href="./calculator.html">Credit calculator</a>
+    <a type="button" href="./tests.html">Tests</a>
+    <a type="button" href="./recommends.html">Recommends</a>
+    <a type="button" href="./callback.html">Callback</a>
+  </div>
+  <h1>Calculator</h1>
+  <div class="calculator">
+    <input id="calc-input" style="grid-area: input" type="text" disabled>
+    <button onclick="clearCalc()" style="grid-area: AC">AC</button>
+    <button onclick="getSqrt()" style="grid-area: sqrt">sqrt</button>
+    <button onclick="pow()" style="grid-area: pow">pow 2</button>
+    <button onclick="divide()" style="grid-area: div">/</button>
+    <button onclick="selectNumber(1)" style="grid-area: one">1</button>
+    <button onclick="selectNumber(2)" style="grid-area: two">2</button>
+    <button onclick="selectNumber(3)" style="grid-area: three">3</button>
+    <button onclick="multiple()" style="grid-area: mult">*</button>
+    <button onclick="selectNumber(4)" style="grid-area: four">4</button>
+    <button onclick="selectNumber(5)" style="grid-area: five">5</button>
+    <button onclick="selectNumber(6)" style="grid-area: six">6</button>
+    <button onclick="subtract()" style="grid-area: sub">-</button>
+    <button onclick="selectNumber(7)" style="grid-area: seven">7</button>
+    <button onclick="selectNumber(8)" style="grid-area: eight">8</button>
+    <button onclick="selectNumber(9)" style="grid-area: nine">9</button>
+    <button onclick="addition()" style="grid-area: add">+</button>
+    <button onclick="selectNumber(0)" style="grid-area: zero">0</button>
+    <button onclick="selectNumber('.')" style="grid-area: dr">.</button>
+    <button onclick="calcResult()" style="grid-area: eq">=</button>
+  </div>
+</div>
+<script>
+  let previousRawValue = '';
+  let calcRawValue = '0';
+  let lastAction = null;
+
+  function clearCalc() {
+    calcRawValue = '0';
+    document.getElementById('calc-input').value = calcRawValue;
+  }
+
+  function savePrevious() {
+    previousRawValue = '' + calcRawValue;
+    calcRawValue = '';
+  }
+
+  function getSqrt() {
+    makeAction('sqrt', true);
+    calcResult();
+  }
+
+  function pow() {
+    makeAction('pow', true);
+    calcResult();
+  }
+
+  function divide() {
+    makeAction('div');
+  }
+
+  function multiple() {
+    makeAction('mult');
+  }
+
+  function subtract() {
+    makeAction('sub');
+  }
+
+  function addition() {
+    makeAction('add');
+  }
+
+  function calcResult() {
+    if (lastAction) {
+      let result = 0;
+      if (lastAction === 'sqrt') {
+        result = Math.sqrt(parseFloat(calcRawValue));
+      } else if (lastAction === 'pow') {
+        result = Math.pow(parseFloat(calcRawValue), 2);
+      } else if (lastAction === 'div') {
+        result = parseFloat(previousRawValue) / parseFloat(calcRawValue);
+      } else if (lastAction === 'mult') {
+        result = parseFloat(previousRawValue) * parseFloat(calcRawValue);
+      } else if (lastAction === 'sub') {
+        result = parseFloat(previousRawValue) - parseFloat(calcRawValue);
+      } else if (lastAction === 'add') {
+        result = parseFloat(previousRawValue) + parseFloat(calcRawValue);
+      }
+      lastAction = null;
+      document.getElementById('calc-input').value = result;
+      calcRawValue = result.toString();
+    }
+  }
+
+  function makeAction(action, ignorePrevious) {
+    if (lastAction) {
+      calcResult();
+      lastAction = null;
+    }
+    lastAction = action;
+    if (!ignorePrevious) {
+      savePrevious();
+    }
+  }
+
+  function selectNumber(value) {
+    if (calcRawValue[0] === '0' && value === 0) {
+      return;
+    }
+    if (calcRawValue[0] === '0') {
+      calcRawValue = '';
+    }
+    if (value === '.') {
+      if (calcRawValue.includes('.')) {
+        return;
+      }
+    }
+    calcRawValue += value.toString();
+    document.getElementById('calc-input').value = calcRawValue;
+  }
+
+  document.getElementById('calc-input').value = calcRawValue;
+</script>
+</body>
+</html>
