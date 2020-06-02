@@ -4,6 +4,24 @@
   <meta charset="UTF-8">
   <title>Recommends</title>
   <link rel="stylesheet" type="text/css" href="./main.css">
+  <style>
+    .form-control {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 32px;
+    }
+
+    label {
+      margin-bottom: 8px;
+      opacity: .75;
+    }
+
+    input {
+      border: 1px solid #e0e0e0;
+      padding: 12px 16px;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
 <div class="container">
@@ -14,7 +32,125 @@
     <a type="button" href="./recommends.html">Recommends</a>
     <a type="button" href="./callback.html">Callback</a>
   </div>
-  <h1>Recommends</h1>
+  <h1>Рекомендательная система по подбору автомобиля из нашего автопарка</h1>
+  <form action="javascript:submit()">
+    <div class="form-control">
+      <label>Введите имя</label>
+      <input type="text" name="name">
+    </div>
+    <div class="form-control">
+      <label>Возраст</label>
+      <input type="text" name="age">
+    </div>
+    <div class="form-control">
+      <label>Какой стиль езды предпочитаете?</label>
+      <select name="style">
+        <option value="fast">Быстрый</option>
+        <option value="relax">Спокойный</option>
+        <option value="slow">Медленный</option>
+      </select>
+    </div>
+    <div class="form-control">
+      <label>Опции</label>
+      <div>
+        <input type="checkbox" name="full">
+        <label>Полный привод</label>
+      </div>
+      <div>
+        <input type="checkbox" name="ton">
+        <label>Тонировка</label>
+      </div>
+      <div>
+        <input type="checkbox" name="comfort">
+        <label>Комфортабельность</label>
+      </div>
+    </div>
+    <div class="message-block"></div>
+    <button type="submit">Подобрать</button>
+  </form>
 </div>
+
+<script>
+  const nameField = document.querySelector('input[name="name"]')
+  const ageField = document.querySelector('input[name="age"]')
+  const styleField = document.querySelector('select[name="style"]')
+  const isFullField = document.querySelector('input[name="full"]')
+  const isTonField = document.querySelector('input[name="ton"]')
+  const isComfortField = document.querySelector('input[name="comfort"]')
+
+  const messageBlock = document.querySelector('.message-block')
+
+  function submit(e) {
+    clearMessage()
+    if (!nameField.value) {
+      setMessage('Введите имя.', true)
+      return
+    }
+    if (!ageField.value) {
+      setMessage('Введите возраст.', true)
+      return
+    }
+    if (!styleField.options[styleField.selectedIndex].value) {
+      setMessage('Выберите стиль езды.', true)
+      return
+    }
+    if (!isFullField.checked && !isTonField.checked && !isComfortField.checked) {
+      setMessage('Выберите один из опций.', true)
+      return
+    }
+
+    computeResult({
+      name: nameField.value,
+      age: ageField.value,
+      style: styleField.value,
+      options: {
+        full: isFullField.value,
+        ton: isTonField.value,
+        comfort: isComfortField.value,
+      }
+    })
+  }
+
+  function clearMessage() {
+    if (messageBlock.hasChildNodes()) {
+      messageBlock.innerHTML = ''
+    }
+  }
+
+  function setMessage(message, isError = false) {
+    clearMessage()
+    const el = document.createElement('div')
+    if (isError) {
+      el.style.backgroundColor = 'rgb(246, 102, 102)'
+      el.style.border = '1px solid #ff3300'
+    } else {
+      el.style.backgroundColor = 'rgb(61,186,113)'
+      el.style.border = '1px solid rgb(125, 255, 179)'
+    }
+    el.style.padding = '12px 16px'
+    el.style.borderRadius ='6px'
+    el.style.marginBottom = '32px'
+    el.style.color = '#fff'
+    el.name = 'error'
+    el.innerHTML = message
+    messageBlock.appendChild(el)
+  }
+
+  function computeResult(form) {
+    let message = `${form.name}, по вашим критерям, думаю, вам подойдет автомобиль: `
+    if (form.style === 'fast') {
+      message += 'BMW'
+    } else if (form.options.full) {
+      message += 'Audi A5'
+    } else if (form.style === 'relax') {
+      message += 'Polo'
+    } else if (form.options.ton) {
+      message += 'Solaris'
+    } else if (form.style === 'slow') {
+      message += 'Oka'
+    }
+    setMessage(message)
+  }
+</script>
 </body>
 </html>
