@@ -15,6 +15,75 @@
     <a type="button" href="./callback.html">Callback</a>
   </div>
   <h1>Callback</h1>
+  <form action="javascript:submit()">
+    <div class="form-control">
+      <label>Ваше имя</label>
+      <input type="text" name="name" placeholder="Введите ваше имя">
+    </div>
+    <div class="form-control">
+      <label>Тема</label>
+      <input type="text" name="subject" placeholder="Введите тему сообщения">
+    </div>
+    <div class="form-control">
+      <label>Сообщение</label>
+      <textarea name="message" placeholder="Введите сообщение"></textarea>
+    </div>
+    <div class="message-block"></div>
+    <div class="form-control">
+      <button type="submit" style="width: 200px">Отправить</button>
+    </div>
+  </form>
 </div>
+<script>
+  const nameField = document.querySelector('input[name="name"]')
+  const subjectField = document.querySelector('input[name="subject"]')
+  const messageField = document.querySelector('textarea[name="message"]')
+  const messageBlock = document.querySelector('.message-block')
+
+  function clearMessage() {
+    if (messageBlock.hasChildNodes()) {
+      messageBlock.innerHTML = ''
+    }
+  }
+
+  function setMessage(message, isError = false) {
+    clearMessage()
+    const el = document.createElement('div')
+    if (isError) {
+      el.style.backgroundColor = 'rgb(246, 102, 102)'
+      el.style.border = '1px solid #ff3300'
+    } else {
+      el.style.backgroundColor = 'rgb(61,186,113)'
+      el.style.border = '1px solid rgb(125, 255, 179)'
+    }
+    el.style.padding = '12px 16px'
+    el.style.borderRadius ='6px'
+    el.style.marginBottom = '32px'
+    el.style.color = '#fff'
+    el.name = 'error'
+    el.innerHTML = message
+    messageBlock.appendChild(el)
+  }
+
+  function submit() {
+    clearMessage()
+    const message = messageField.value
+    const name = nameField.value
+    const subject = subjectField.value
+    if (!name) {
+      setMessage('Введите имя.', true)
+      return
+    }
+    if (!subject) {
+      setMessage('Введите тему.', true)
+      return
+    }
+    if (!message) {
+      setMessage('Введите сообщение.', true)
+      return
+    }
+    window.open(`mailto:bulat.guzairov@mail.com?subject=${subject}&body=${message}`, '_blank')
+  }
+</script>
 </body>
 </html>

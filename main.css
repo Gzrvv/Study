@@ -30,3 +30,24 @@ a[type="button"], button {
 a[type="button"]:hover, button:hover {
     background-color: #2753a3;
 }
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 32px;
+}
+
+label {
+    margin-bottom: 8px;
+    opacity: .75;
+}
+
+input, textarea {
+    border: 1px solid #e0e0e0;
+    padding: 12px 16px;
+    border-radius: 6px;
+}
+
+textarea {
+    height: 100px;
+}
