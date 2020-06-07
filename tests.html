@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <title>Tests</title>
   <link rel="stylesheet" type="text/css" href="./main.css">
+  <style>
+    .tests {
+      display: grid;
+      grid-gap: 32px;
+      margin-bottom: 32px;
+    }
+
+    .test {
+      padding-bottom: 32px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .test > input {
+      margin-top: 8px;
+    }
+  </style>
 </head>
 <body>
 <div class="container">
@@ -15,6 +31,76 @@
     <a type="button" href="./callback.html">Callback</a>
   </div>
   <h1>Tests</h1>
+  <div class="tests"></div>
+  <div class="message-block"></div>
+  <button onclick="javascript:submit()">Check</button>
 </div>
+<script>
+  const testsRef = document.querySelector('.tests')
+  const messageBlock = document.querySelector('.message-block')
+  const tests = [
+    {
+      id: 1,
+      question: '2 + 2 = ...',
+      answer: 4,
+    },
+    {
+      id: 2,
+      question: '2 + 3 = ...',
+      answer: 5,
+    },
+  ];
+
+  function generateTests() {
+    for (const test of tests) {
+      const el = document.createElement('div')
+      el.classList.add('test')
+      el.innerHTML = `
+        <div>${test.question}</div>
+        <input type="text" placeholder="Answer" name="question-${test.id}">
+      `
+      testsRef.appendChild(el)
+    }
+  }
+
+  function submit() {
+    for (const test of tests) {
+      const testInputRef = document.querySelector(`input[name="question-${test.id}"]`)
+      console.log(testInputRef.value)
+      if (testInputRef && `${testInputRef.value}` !== `${test.answer}`) {
+        return setMessage('Failed!', true)
+      }
+    }
+    return setMessage('Success!')
+  }
+
+  function clearMessage() {
+    if (messageBlock.hasChildNodes()) {
+      messageBlock.innerHTML = ''
+    }
+  }
+
+  function setMessage(message, isError = false) {
+    clearMessage()
+    const el = document.createElement('div')
+    if (isError) {
+      el.style.backgroundColor = 'rgb(246, 102, 102)'
+      el.style.border = '1px solid #ff3300'
+    } else {
+      el.style.backgroundColor = 'rgb(61,186,113)'
+      el.style.border = '1px solid rgb(125, 255, 179)'
+    }
+    el.style.padding = '12px 16px'
+    el.style.borderRadius ='6px'
+    el.style.marginBottom = '32px'
+    el.style.color = '#fff'
+    el.name = 'error'
+    el.innerHTML = message
+    messageBlock.appendChild(el)
+  }
+
+
+  generateTests()
+</script>
 </body>
 </html>
